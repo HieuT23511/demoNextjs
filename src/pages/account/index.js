@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
     LegacyCard,
     Form,
@@ -23,12 +23,32 @@ export default function Account() {
                 city: ""
             }
         ]
-    })
-    const onSubmit =  (form) => {
+    });
+    const [account, setAccount] = useState(null);
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        const res = await fetch(`/api/account`);
+        const resJson = await res.json();
+        console.log({ resJson });
+        if (resJson) {
+            setAccount(resJson)
+        }
+        setLoading(false)
+    }, [])
+    const onSubmit = async (form) => {
         setData(form)
         console.log(data);
+        const res = await fetch(`/api/submit`, {
+            method: 'POST',
+            body: JSON.stringify(form.addresses)
+        });
     };
-   
+
     const nameField = useField({
         value: data.name,
         validates: [notEmptyString('Name is required')],
@@ -88,6 +108,9 @@ export default function Account() {
         });
     return (
         <div style={{ textAlign: 'left' }}>
+            <div>
+                <h2>list address: {JSON.stringify(account)}</h2>
+            </div>
             <Page title="Account">
                 <Layout>
                     <Layout.AnnotatedSection
