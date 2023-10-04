@@ -1,5 +1,5 @@
 {
-  "name": "basic-nextjs-pages-router",
+  "name": "exercise2",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "latest",
-    "react-dom": "latest",
-    "next": "latest"
+    "@shopify/polaris": "^11.25.0",
+    "@shopify/react-form": "^2.5.5",
+    "fs": "^0.0.1-security",
+    "fs.promises": "^0.1.2",
+    "next": "13.5.4",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "latest",
-    "@types/react": "latest",
-    "@types/node": "latest",
-    "@types/react-dom": "latest",
-    "eslint": "latest",
-    "eslint-config-next": "latest"
+    "eslint": "^8",
+    "eslint-config-next": "13.5.4"
   }
 }
