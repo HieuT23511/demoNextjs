@@ -1,6 +1,5 @@
 import { Navigation } from '@shopify/polaris';
 import { HomeMinor, LocationFilledMajor, ArrowLeftMinor } from '@shopify/polaris-icons';
-// import { useNavigate, useLocation } from 'react-router-dom'
 import React from 'react';
 import { useRouter } from 'next/router'
 

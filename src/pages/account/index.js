@@ -7,13 +7,15 @@ import {
     Page,
     TextField,
     Button,
-    Toast
+    Toast,
+    Modal
 } from '@shopify/polaris';
 import { useState } from 'react';
 import { useField, notEmptyString, useDynamicList, useForm } from '@shopify/react-form';
 
 export default function Account() {
     const [toastActive, setToastActive] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -24,31 +26,22 @@ export default function Account() {
             }
         ]
     });
-    const [account, setAccount] = useState(null);
-    const [loading, setLoading] = useState(false);
     useEffect(() => {
         fetchData()
     }, []);
-
     const fetchData = useCallback(async () => {
-        setLoading(true);
         const res = await fetch(`/api/account`);
         const resJson = await res.json();
-        console.log({ resJson });
         if (resJson) {
-            setAccount(resJson)
+            setData(resJson)
         }
-        setLoading(false)
     }, [])
-    const onSubmit = async (form) => {
-        setData(form)
-        console.log(data);
+    const handleSubmitForm = async (form) => {
         const res = await fetch(`/api/submit`, {
             method: 'POST',
-            body: JSON.stringify(form.addresses)
+            body: JSON.stringify(form)
         });
     };
-
     const nameField = useField({
         value: data.name,
         validates: [notEmptyString('Name is required')],
@@ -64,27 +57,31 @@ export default function Account() {
             },
         ],
     });
-
     const emptyNewAddress = () => ({
         address: '',
         city: '',
     });
     const { fields: addresses, addItem, removeItem } = useDynamicList(data.addresses, emptyNewAddress);
-
-    const deleteAddressWithConfirmation = (index) => {
-        const isConfirmed = window.confirm('Are you sure to delete this address?');
-        if (isConfirmed) {
-            removeItem(index);
-        }
+    const handleDeleteClick = (index) => {
+        setIsDeleteModalOpen(true);
     };
-
+    const handleCancelDelete = () => {
+        setIsDeleteModalOpen(false);
+    };
+    const handleConfirmDelete = (index) => {
+        setIsDeleteModalOpen(false);
+        removeItem(index)
+    };
     const { fields, submit, submitting } =
         useForm({
             fields: {
                 name: nameField,
                 email: emailField,
+                // addresses: {
+                //     address: addressField,
+                //     city: cityField
+                // }
             },
-
             onSubmit: async (form) => {
                 const formData = {
                     name: form.name,
@@ -94,23 +91,16 @@ export default function Account() {
                         city: address.city.value
                     }))
                 };
-                try {
-                    await onSubmit(formData);
-                    setToastActive(true);
-                    setTimeout(() => {
-                        setToastActive(false);
-                    }, 1500);
-                } catch (error) {
-                    console.error('Lỗi khi lưu dữ liệu:', error);
-                }
+                await handleSubmitForm(formData);
+                setToastActive(true);
+                setTimeout(() => {
+                    setToastActive(false);
+                }, 1500);
                 return { status: 'true' };
             },
         });
     return (
         <div style={{ textAlign: 'left' }}>
-            <div>
-                <h2>list address: {JSON.stringify(account)}</h2>
-            </div>
             <Page title="Account">
                 <Layout>
                     <Layout.AnnotatedSection
@@ -152,7 +142,7 @@ export default function Account() {
                                                     {...address.city}
                                                     placeholder='your city'
                                                 />
-                                                <button onClick={() => deleteAddressWithConfirmation(index)}> Delete {`Address(${index + 1})`}</button>
+                                                <Button onClick={() => handleDeleteClick(index)} destructive> Delete {`Address(${index + 1})`}</Button>
                                             </FormLayout>
                                         </div>
                                     ))}
@@ -168,6 +158,26 @@ export default function Account() {
                                     </div>
                                 </FormLayout>
                             </LegacyCard>
+                            <Modal
+                                open={isDeleteModalOpen}
+                                onClose={handleCancelDelete}
+                                title="Confirm Delete"
+                                primaryAction={{
+                                    content: 'Delete',
+                                    onAction: handleConfirmDelete,
+                                    destructive: true,
+                                }}
+                                secondaryActions={[
+                                    {
+                                        content: 'Cancel',
+                                        onAction: handleCancelDelete,
+                                    },
+                                ]}
+                            >
+                                <Modal.Section>
+                                    <p>Are you sure you want to delete this item?</p>
+                                </Modal.Section>
+                            </Modal>
                         </Form>
                     </Layout.AnnotatedSection>
                 </Layout>

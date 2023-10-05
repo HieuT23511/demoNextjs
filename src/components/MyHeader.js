@@ -1,13 +1,26 @@
 import { TopBar, ActionList, Icon, Text } from '@shopify/polaris';
 import { ArrowLeftMinor, QuestionMarkMajor } from '@shopify/polaris-icons';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useData } from '@/context/DataContext';
 
-export default function MyHeader({ name }) {
-
+export default function MyHeader() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  // const [nameAccount, setNameAccount] = useState('')
+
+  // useEffect(() => {
+  //   fetchDataNameAccount()
+  // }, []);
+
+  // const fetchDataNameAccount = useCallback(async () => {
+  //   const res = await fetch(`/api/account`);
+  //   const resJson = await res.json();
+  //   if (resJson) {
+  //     setNameAccount(resJson.name)
+  //   }
+  // }, [])
 
   const toggleIsUserMenuOpen = useCallback(
     () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
@@ -33,6 +46,7 @@ export default function MyHeader({ name }) {
     console.log('toggle navigation visibility');
   }, []);
 
+  const { dataName } = useData();
 
   const userMenuMarkup = (
     <TopBar.UserMenu
@@ -44,7 +58,7 @@ export default function MyHeader({ name }) {
           items: [{ content: 'Community forums' }],
         },
       ]}
-      name={name}
+      name={dataName}
       open={isUserMenuOpen}
       onToggle={toggleIsUserMenuOpen}
     />
