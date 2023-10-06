@@ -12,8 +12,10 @@ import {
 } from '@shopify/polaris';
 import { useState } from 'react';
 import { useField, notEmptyString, useDynamicList, useForm } from '@shopify/react-form';
+import { useData } from '@/contexts/DataContext';
 
 export default function Account() {
+    const { updateData } = useData();
     const [toastActive, setToastActive] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [data, setData] = useState({
@@ -30,10 +32,14 @@ export default function Account() {
         fetchData()
     }, []);
     const fetchData = useCallback(async () => {
-        const res = await fetch(`/api/account`);
-        const resJson = await res.json();
-        if (resJson) {
-            setData(resJson)
+        try {
+            const res = await fetch(`/api/account`);
+            const resJson = await res.json();
+            if (res.status === 200) {
+                setData(resJson)
+            }
+        } catch (error) {
+            console.error('Error fetching initial data:', error);
         }
     }, [])
     const handleSubmitForm = async (form) => {
@@ -41,6 +47,7 @@ export default function Account() {
             method: 'POST',
             body: JSON.stringify(form)
         });
+        updateData(form)
     };
     const nameField = useField({
         value: data.name,
@@ -52,7 +59,7 @@ export default function Account() {
             notEmptyString('Email is required'),
             (value) => {
                 if (!value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
-                    return 'Email không hợp lệ';
+                    return 'Email is invalid!';
                 }
             },
         ],
@@ -77,10 +84,6 @@ export default function Account() {
             fields: {
                 name: nameField,
                 email: emailField,
-                // addresses: {
-                //     address: addressField,
-                //     city: cityField
-                // }
             },
             onSubmit: async (form) => {
                 const formData = {
@@ -133,7 +136,7 @@ export default function Account() {
                                         <div key={index} style={{ marginTop: '30px' }}>
                                             <FormLayout key={index}>
                                                 <TextField
-                                                    label={`Address(${index + 1})`}
+                                                    label={`Address (${index + 1})`}
                                                     {...address.address}
                                                     placeholder='your address'
                                                 />
@@ -142,7 +145,7 @@ export default function Account() {
                                                     {...address.city}
                                                     placeholder='your city'
                                                 />
-                                                <Button onClick={() => handleDeleteClick(index)} destructive> Delete {`Address(${index + 1})`}</Button>
+                                                <Button onClick={() => handleDeleteClick(index)} destructive> Delete {`Address (${index + 1})`}</Button>
                                             </FormLayout>
                                         </div>
                                     ))}

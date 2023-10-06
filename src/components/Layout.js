@@ -1,6 +1,8 @@
 import MyHeader from "./MyHeader";
 import MySidebar from "./MySidebar";
 import { Frame } from "@shopify/polaris";
+import '@shopify/polaris/build/esm/styles.css';
+
 
 export default function Layout({ children }) {
     const logo = {
@@ -10,7 +12,6 @@ export default function Layout({ children }) {
         accessibilityLabel: 'Jaded Pixel',
         url: '/'
     };
-
     return (
         <Frame
             logo={logo}

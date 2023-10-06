@@ -1,53 +1,34 @@
 import { TopBar, ActionList, Icon, Text } from '@shopify/polaris';
 import { ArrowLeftMinor, QuestionMarkMajor } from '@shopify/polaris-icons';
-import { useState, useCallback, useEffect } from 'react';
-import { useData } from '@/context/DataContext';
+import { useState, useCallback } from 'react';
+import { useData } from '@/contexts/DataContext';
 
 export default function MyHeader() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  // const [nameAccount, setNameAccount] = useState('')
-
-  // useEffect(() => {
-  //   fetchDataNameAccount()
-  // }, []);
-
-  // const fetchDataNameAccount = useCallback(async () => {
-  //   const res = await fetch(`/api/account`);
-  //   const resJson = await res.json();
-  //   if (resJson) {
-  //     setNameAccount(resJson.name)
-  //   }
-  // }, [])
+  const { dataContext } = useData();
 
   const toggleIsUserMenuOpen = useCallback(
     () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
     [],
   );
-
   const toggleIsSecondaryMenuOpen = useCallback(
     () => setIsSecondaryMenuOpen((isSecondaryMenuOpen) => !isSecondaryMenuOpen),
     [],
   );
-
   const handleSearchResultsDismiss = useCallback(() => {
     setIsSearchActive(false);
     setSearchValue('');
   }, []);
-
   const handleSearchChange = useCallback((value) => {
     setSearchValue(value);
     setIsSearchActive(value.length > 0);
   }, []);
-
   const handleNavigationToggle = useCallback(() => {
     console.log('toggle navigation visibility');
   }, []);
-
-  const { dataName } = useData();
-
   const userMenuMarkup = (
     <TopBar.UserMenu
       actions={[
@@ -58,18 +39,16 @@ export default function MyHeader() {
           items: [{ content: 'Community forums' }],
         },
       ]}
-      name={dataName}
+      name={dataContext.name}
       open={isUserMenuOpen}
       onToggle={toggleIsUserMenuOpen}
     />
   );
-
   const searchResultsMarkup = (
     <ActionList
       items={[{ content: 'Shopify help center' }, { content: 'Community forums' }]}
     />
   );
-
   const searchFieldMarkup = (
     <TopBar.SearchField
       onChange={handleSearchChange}
@@ -78,7 +57,6 @@ export default function MyHeader() {
       showFocusBorder
     />
   );
-
   const secondaryMenuMarkup = (
     <TopBar.Menu
       activatorContent={
@@ -99,7 +77,6 @@ export default function MyHeader() {
       ]}
     />
   );
-
   const topBarMarkup = (
     <TopBar
       showNavigationToggle
@@ -112,7 +89,6 @@ export default function MyHeader() {
       onNavigationToggle={handleNavigationToggle}
     />
   );
-
   return (
     topBarMarkup
   );

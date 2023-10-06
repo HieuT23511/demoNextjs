@@ -6,10 +6,14 @@ export default function AddressInfo() {
         fetchDataAddress()
     }, []);
     const fetchDataAddress = useCallback(async () => {
-        const res = await fetch(`/api/account`);
-        const resJson = await res.json();
-        if (resJson) {
-            setAddresses(resJson.addresses)
+        try {
+            const res = await fetch(`/api/account`);
+            const resJson = await res.json();
+            if (res.status === 200) {
+                setAddresses(resJson.addresses)
+            }
+        } catch (error) {
+            console.error('Error fetching initial data:', error);
         }
     }, [])
     const rows = addresses.map((item) => [item.address, item.city])
