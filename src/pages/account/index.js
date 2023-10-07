@@ -91,13 +91,13 @@ export default function Account() {
                 let isValidate = true;
                 addresses.forEach(item => {
                     if (!item.address.value || !item.address.value.trim()) {
-                        item.address.setError("Your address it not empty!")
+                        item.address.setError("Address is required!")
                         isValidate = false
                     } else {
                         item.address.setError("")
                     }
                     if (!item.city.value || !item.city.value.trim()) {
-                        item.city.setError("Your city it not empty!")
+                        item.city.setError("City is is required!")
                         isValidate = false;
                     } else {
                         item.city.setError("")
@@ -163,7 +163,7 @@ export default function Account() {
                                                         onChange={(value) => {
                                                             address.address.onChange(value)
                                                             if (!value || !value.trim()) {
-                                                                address.address.setError("Your address it not empty!")
+                                                                address.address.setError("Address is required!")
                                                             } else {
                                                                 address.address.setError("")
                                                             }
@@ -176,7 +176,7 @@ export default function Account() {
                                                         onChange={(value) => {
                                                             address.city.onChange(value)
                                                             if (!value || !value.trim()) {
-                                                                address.city.setError("Your city it not empty!")
+                                                                address.city.setError("City is required!")
                                                             } else {
                                                                 address.city.setError("")
                                                             }
