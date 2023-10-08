@@ -1,14 +1,16 @@
 import { TopBar, ActionList, Icon, Text } from '@shopify/polaris';
 import { ArrowLeftMinor, QuestionMarkMajor } from '@shopify/polaris-icons';
 import { useState, useCallback } from 'react';
-import { useData } from '@/contexts/DataContext';
+import { useSelector } from 'react-redux';
+// import { useData } from '@/contexts/DataContext';
 
 export default function MyHeader() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-  const { dataContext } = useData();
+  // const { dataContext } = useData();
+  const name = useSelector(state => state.accountInfo.name)
 
   const toggleIsUserMenuOpen = useCallback(
     () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
@@ -39,7 +41,7 @@ export default function MyHeader() {
           items: [{ content: 'Community forums' }],
         },
       ]}
-      name={dataContext.name}
+      name={name}
       open={isUserMenuOpen}
       onToggle={toggleIsUserMenuOpen}
     />

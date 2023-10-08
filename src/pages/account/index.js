@@ -12,22 +12,26 @@ import {
 } from '@shopify/polaris';
 import { useState } from 'react';
 import { useField, notEmptyString, useDynamicList, useForm } from '@shopify/react-form';
-import { useData } from '@/contexts/DataContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateAdress } from '@/redux/addressSlice';
 
 export default function Account() {
-    const { updateData } = useData();
+    const dispatch = useDispatch();
+    // const { updateData } = useData();
+    const accountInfo = useSelector(state => state.accountInfo);
     const [toastActive, setToastActive] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [data, setData] = useState({
-        name: "",
-        email: "",
-        addresses: [
-            {
-                address: "",
-                city: ""
-            }
-        ]
-    });
+
+    // const [data, setData] = useState({
+    //     name: "",
+    //     email: "",
+    //     addresses: [
+    //         {
+    //             address: "",
+    //             city: ""
+    //         }
+    //     ]
+    // });
 
     useEffect(() => {
         fetchData()
@@ -38,7 +42,8 @@ export default function Account() {
             const res = await fetch(`/api/account`);
             const resJson = await res.json();
             if (res.status === 200) {
-                setData(resJson)
+                // setData(resJson)
+                dispatch(updateAdress(resJson))
             }
         } catch (error) {
             console.error('Error fetching initial data:', error);
@@ -49,14 +54,15 @@ export default function Account() {
             method: 'POST',
             body: JSON.stringify(form)
         });
-        updateData(form)
+        // updateData(form)
+        // dispatch(updateAdress(form))
     };
     const nameField = useField({
-        value: data.name,
+        value: accountInfo.name,
         validates: [notEmptyString('Name is required')],
     });
     const emailField = useField({
-        value: data.email,
+        value: accountInfo.email,
         validates: [
             notEmptyString('Email is required'),
             (value) => {
@@ -70,7 +76,7 @@ export default function Account() {
         address: '',
         city: '',
     });
-    const { fields: addresses, addItem, removeItem } = useDynamicList(data.addresses, emptyNewAddress);
+    const { fields: addresses, addItem, removeItem } = useDynamicList(accountInfo.addresses, emptyNewAddress);
     const handleDeleteClick = (index) => {
         setIsDeleteModalOpen(true);
     };
