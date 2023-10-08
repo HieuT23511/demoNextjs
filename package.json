@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.7",
     "@shopify/polaris": "^11.25.0",
     "@shopify/react-form": "^2.5.5",
     "fs": "^0.0.1-security",
@@ -23,5 +24,9 @@
   "devDependencies": {
     "eslint": "^8",
     "eslint-config-next": "13.5.4"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "next.config.js",
+  "author": "",
+  "license": "ISC"
 }

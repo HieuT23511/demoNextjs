@@ -1,16 +1,17 @@
 import Layout from '@/components/Layout'
 import '@/styles/globals.css'
 import { AppProvider } from '@shopify/polaris'
-import { DataProvider } from '@/contexts/DataContext'
+import { store } from '../redux/store';
+import { Provider } from 'react-redux';
 
 export default function App({ Component, pageProps }) {
   return (
     <AppProvider>
-      <DataProvider>
+      <Provider store={store}>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </DataProvider>
+      </Provider>
     </AppProvider>
   )
 }
