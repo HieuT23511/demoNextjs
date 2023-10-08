@@ -21,6 +21,7 @@ export default function Account() {
     const accountInfo = useSelector(state => state.accountInfo);
     const [toastActive, setToastActive] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
     // const [data, setData] = useState({
     //     name: "",
     //     email: "",
@@ -31,9 +32,11 @@ export default function Account() {
     //         }
     //     ]
     // });
+
     useEffect(() => {
         fetchData()
     }, []);
+
     const fetchData = useCallback(async () => {
         try {
             const res = await fetch(`/api/account`);
@@ -91,6 +94,24 @@ export default function Account() {
                 email: emailField,
             },
             onSubmit: async (form) => {
+                let isValidate = true;
+                addresses.forEach(item => {
+                    if (!item.address.value || !item.address.value.trim()) {
+                        item.address.setError("Address is required!")
+                        isValidate = false
+                    } else {
+                        item.address.setError("")
+                    }
+                    if (!item.city.value || !item.city.value.trim()) {
+                        item.city.setError("City is is required!")
+                        isValidate = false;
+                    } else {
+                        item.city.setError("")
+                    }
+                })
+                if (!isValidate) {
+                    return { status: 'fail', errors: [{ message: 'bad form data' }] }
+                }
                 const formData = {
                     name: form.name,
                     email: form.email,
@@ -107,6 +128,7 @@ export default function Account() {
                 return { status: 'true' };
             },
         });
+
     return (
         <div style={{ textAlign: 'left' }}>
             <Page title="Account">
@@ -137,23 +159,41 @@ export default function Account() {
                             </LegacyCard>
                             <LegacyCard sectioned>
                                 <FormLayout>
-                                    {addresses.map((address, index) => (
-                                        <div key={index} style={{ marginTop: '30px' }}>
-                                            <FormLayout key={index}>
-                                                <TextField
-                                                    label={`Address (${index + 1})`}
-                                                    {...address.address}
-                                                    placeholder='your address'
-                                                />
-                                                <TextField
-                                                    label="City"
-                                                    {...address.city}
-                                                    placeholder='your city'
-                                                />
-                                                <Button onClick={() => handleDeleteClick(index)} destructive> Delete {`Address (${index + 1})`}</Button>
-                                            </FormLayout>
-                                        </div>
-                                    ))}
+                                    {addresses.map((address, index) => {
+                                        return (
+                                            <div key={index} style={{ marginTop: '30px' }}>
+                                                <FormLayout key={index}>
+                                                    <TextField
+                                                        label={`Address (${index + 1})`}
+                                                        {...address.address}
+                                                        onChange={(value) => {
+                                                            address.address.onChange(value)
+                                                            if (!value || !value.trim()) {
+                                                                address.address.setError("Address is required!")
+                                                            } else {
+                                                                address.address.setError("")
+                                                            }
+                                                        }}
+                                                        placeholder='Your address'
+                                                    />
+                                                    <TextField
+                                                        label="City"
+                                                        {...address.city}
+                                                        onChange={(value) => {
+                                                            address.city.onChange(value)
+                                                            if (!value || !value.trim()) {
+                                                                address.city.setError("City is required!")
+                                                            } else {
+                                                                address.city.setError("")
+                                                            }
+                                                        }}
+                                                        placeholder='Your city'
+                                                    />
+                                                    <Button onClick={() => handleDeleteClick(index)} destructive> Delete {`Address (${index + 1})`}</Button>
+                                                </FormLayout>
+                                            </div>
+                                        )
+                                    })}
                                     <div style={{ display: 'flex', justifyContent: 'end', gap: '0.5rem' }}>
                                         <Button onClick={() => addItem()}>New Address</Button>
                                         <Button
