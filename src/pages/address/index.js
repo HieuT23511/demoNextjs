@@ -1,4 +1,4 @@
-import { updateAdress } from '@/redux/addressSlice';
+import { updateDataAccount } from '@/redux/addressReducer';
 import { Layout, LegacyCard, Page, DataTable } from '@shopify/polaris';
 import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ export default function AddressInfo() {
             const res = await fetch(`/api/account`);
             const resJson = await res.json();
             if (res.status === 200) {
-                dispatch(updateAdress(resJson))
+                dispatch(updateDataAccount(resJson))
             }
         } catch (error) {
             console.error('Error fetching initial data:', error);

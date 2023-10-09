@@ -13,7 +13,7 @@ import {
 import { useState } from 'react';
 import { useField, notEmptyString, useDynamicList, useForm } from '@shopify/react-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateAdress } from '@/redux/addressSlice';
+import { updateDataAccount } from '@/redux/addressReducer';
 
 export default function Account() {
     const dispatch = useDispatch();
@@ -43,7 +43,7 @@ export default function Account() {
             const resJson = await res.json();
             if (res.status === 200) {
                 // setData(resJson)
-                dispatch(updateAdress(resJson))
+                dispatch(updateDataAccount(resJson))
             }
         } catch (error) {
             console.error('Error fetching initial data:', error);
@@ -55,7 +55,7 @@ export default function Account() {
             body: JSON.stringify(form)
         });
         // updateData(form)
-        // dispatch(updateAdress(form))
+        dispatch(updateDataAccount(form))
     };
     const nameField = useField({
         value: accountInfo.name,

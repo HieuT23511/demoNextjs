@@ -13,15 +13,15 @@ const initialState = {
     }
 };
 
-const addressSlice = createSlice({
-    name: "address",
+const addressReducer = createSlice({
+    name: "data",
     initialState,
     reducers: {
-        updateAdress: (state, action) => {
+        updateDataAccount: (state, action) => {
             state.accountInfo = action.payload
         }
     }
 })
 
-export const { updateAdress } = addressSlice.actions;
-export default addressSlice.reducer;
+export const { updateDataAccount } = addressReducer.actions;
+export default addressReducer.reducer;
