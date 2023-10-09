@@ -21,8 +21,7 @@ export default function Account() {
     const accountInfo = useSelector(state => state.accountInfo);
     const [toastActive, setToastActive] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    [selectIndex, setSelectIndex] = useState(-1);
-
+    const [selectIndex, setSelectIndex] = useState(-1);
     // const [data, setData] = useState({
     //     name: "",
     //     email: "",
@@ -80,14 +79,14 @@ export default function Account() {
     const { fields: addresses, addItem, removeItem } = useDynamicList(accountInfo.addresses, emptyNewAddress);
     const handleDeleteClick = (index) => {
         setIsDeleteModalOpen(true);
-        setSelectIndex(index)
+        setSelectIndex(index);
     };
     const handleCancelDelete = () => {
         setIsDeleteModalOpen(false);
     };
     const handleConfirmDelete = (index) => {
         setIsDeleteModalOpen(false);
-        removeItem(index)
+        removeItem(index);
     };
     const { fields, submit, submitting } =
         useForm({
@@ -214,7 +213,7 @@ export default function Account() {
                                 title="Confirm Delete"
                                 primaryAction={{
                                     content: 'Delete',
-                                    onAction: handleConfirmDelete,
+                                    onAction: () => handleConfirmDelete(selectIndex),
                                     destructive: true,
                                 }}
                                 secondaryActions={[
