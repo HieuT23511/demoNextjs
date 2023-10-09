@@ -21,6 +21,7 @@ export default function Account() {
     const accountInfo = useSelector(state => state.accountInfo);
     const [toastActive, setToastActive] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    [selectIndex, setSelectIndex] = useState(-1);
 
     // const [data, setData] = useState({
     //     name: "",
@@ -79,6 +80,7 @@ export default function Account() {
     const { fields: addresses, addItem, removeItem } = useDynamicList(accountInfo.addresses, emptyNewAddress);
     const handleDeleteClick = (index) => {
         setIsDeleteModalOpen(true);
+        setSelectIndex(index)
     };
     const handleCancelDelete = () => {
         setIsDeleteModalOpen(false);
